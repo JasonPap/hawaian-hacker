@@ -17,13 +17,14 @@ for i in range(1900, 2017):
     years.append(str(i))
 
 ages = []
-for i in range(0, 100):
+for i in range(0, 50):
     ages.append(str(i))
 
 
 class Password:
     def __init__(self, password):
-        self.password = list(password)
+        tmp = password
+        self.password = list(tmp.rstrip('\n'))
         self.letter_frequencies = dict()
         self.others = []
 
@@ -59,20 +60,25 @@ class Password:
         if self.others:
             print self.others
 
-    def mutate(self, changes=3, max_results=10):
+    def mutate(self, change_factor=2, max_results=10):
         """
         Mutations in this function are based on the substitution dictionary and are randomized.
-        :param changes: number of mutation of the password
+        :param change_factor: set this param to 2 to change half the characters of the word,
+        3 to change 1/3 rd of them etc.
         :param max_results: maximum number of results returned
         :return: list of different mutations of the original password
         """
         results = dict()
         s = list(range(0, len(self.password)))
-
+        alt = ""
         for num in range(0, max_results*max_results):
             random.shuffle(s)
-            for i in range(0, changes):
-                alt = random.choice(substitutions[self.password[s[i]]])
+            for i in range(0, len(self.password)/change_factor):
+                c = self.password[s[i]]
+                if c in substitutions:
+                    alt = random.choice(substitutions[c])
+                else:
+                    alt = random.choice(string.ascii_letters)
                 newpsw = self.password[:s[i]] + [alt] + self.password[s[i]+1:]
                 results[''.join(newpsw)] = 1
                 if len(results) >= max_results:
