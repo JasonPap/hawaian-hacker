@@ -7,8 +7,10 @@ def generate_passwords(frequencies, amount, length):
     cdf = []
     total = sum(frequencies.values())
     results = []
+    # normalize frequencies
     for letter in pdf:
         cdf.append((letter[0], letter[1]/total))
+    # print cdf
     for i in range(0, amount):
         lpwd = []
         for j in range(0, length):

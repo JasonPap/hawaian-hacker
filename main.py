@@ -1,11 +1,12 @@
 import sys
+import random
 from Password import Password
 from PasswordClassifier import PasswordClassifier
 import PasswordGen
 
 
 def main():
-    wordfile = "my_passwords.txt"
+    wordfile = "linkedin.txt"
     outputFile = "mutations.txt"
     if len(sys.argv) != 3:
         print "Number of arguments dif than 2, default filenames will be used"
@@ -17,19 +18,16 @@ def main():
     with open(outputFile, 'w'):
         pass
 
-    print "starting"
+    print "Creating classifier"
+    classifier = PasswordClassifier()
+    classifier.train(wordfile)
+    print "Classifier built"
 
-    # classifier = PasswordClassifier()
-    # classifier.train(wordfile)
-    # print "Classifier built"
-    # classifier.predict("password")
-    # classifier.predict("XxXxXxXXxXxXxX9x9x8XX7")
-    # classifier.predict("jason1992")
-    # classifier.predict("annaconda")
-
+    count = 3000000  # """ <<==== minimum number of passwords to be generated"""
     letter_frequencies = dict()
     with open(outputFile, 'a') as output:
         with open(wordfile, 'r') as words:
+            print "Calculating letter frequencies"
             for simpleWord in words:
                 # below should be the logic for the creation of the new dictionary
                 password = Password(simpleWord)
@@ -47,7 +45,21 @@ def main():
                 # output.write('\n'.join(mutations) + "\n")
             # for c in letter_frequencies:
             #    output.write(c + "," + str(letter_frequencies[c]) + "\n")
-            print PasswordGen.generate_passwords(letter_frequencies, 10, 6)
+            print "Generating new passwords"
+            n_created = 0
+            while n_created <= count:
+                tentative_passwords = PasswordGen.generate_passwords(letter_frequencies, 1000, random.randint(7, 14))
+                output_buffer = []
+                for p in tentative_passwords:
+                    if classifier.predict(p):
+                        output_buffer.append(p)
+                        P = Password(p)
+                        mutations = P.mutate(change_factor=3)
+                        output_buffer.extend(mutations)
+                        n_created += len(mutations) + 1
+                output.write('\n'.join(output_buffer) + "\n")
+                print "Created: " + str(n_created)
+
     print "done"
 
 
