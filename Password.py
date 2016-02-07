@@ -95,3 +95,4 @@ class Password:
             results.append(word + age)
 
         return results
+
