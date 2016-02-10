@@ -17,7 +17,7 @@ for i in range(1900, 2017):
     years.append(str(i))
 
 ages = []
-for i in range(0, 50):
+for i in range(0, 99):
     ages.append(str(i))
 
 
@@ -70,19 +70,36 @@ class Password:
         """
         results = dict()
         s = list(range(0, len(self.password)))
-        alt = ""
-        for num in range(0, max_results*max_results):
+        # alt = ""
+        count = 0
+        # while len(results) < max_results:
+        #     random.shuffle(s)
+        #     for i in range(0, len(self.password)/change_factor):
+        #         c = self.password[s[i]]
+        #         if c in substitutions:
+        #             alt = random.choice(substitutions[c])
+        #         else:
+        #             alt = random.choice(string.ascii_letters)
+        #     newpsw = self.password[:s[i]] + [alt] + self.password[s[i]+1:]
+        #     results[''.join(newpsw)] = 1
+        #     count += 1
+        #     if count > 10*max_results:
+        #         break
+
+        while len(results) < max_results:
             random.shuffle(s)
+            newpsw = self.password
             for i in range(0, len(self.password)/change_factor):
                 c = self.password[s[i]]
                 if c in substitutions:
-                    alt = random.choice(substitutions[c])
+                    newpsw[s[i]] = random.choice(substitutions[c])
                 else:
-                    alt = random.choice(string.ascii_letters)
-                newpsw = self.password[:s[i]] + [alt] + self.password[s[i]+1:]
-                results[''.join(newpsw)] = 1
-                if len(results) >= max_results:
-                    break
+                    newpsw[s[i]] = random.choice(string.ascii_letters)
+            results[''.join(newpsw)] = 1
+            count += 1
+            if count > 10*max_results:
+                break
+
         return results.keys()
 
     def append_numbers(self):
@@ -93,6 +110,11 @@ class Password:
             results.append(word + year)
         for age in ages:
             results.append(word + age)
+        results.append(word + "123")
+        results.append(word + "1234")
+        results.append(word + "12345")
+        results.append(word + "123456")
+        results.append("1" + word)
 
         return results
 

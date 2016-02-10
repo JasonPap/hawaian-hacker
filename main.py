@@ -5,9 +5,9 @@ from PasswordClassifier import PasswordClassifier
 import PasswordGen
 
 
-def main():
-    wordfile = "linkedin.txt"
-    outputFile = "mutations.txt"
+def classify_and_generate():
+    wordfile = "input_dictionaries/linkedin.txt"
+    outputFile = "output_dictionaries/mutations.txt"
     if len(sys.argv) != 3:
         print "Number of arguments dif than 2, default filenames will be used"
     else:
@@ -23,7 +23,7 @@ def main():
     classifier.train(wordfile)
     print "Classifier built"
 
-    count = 3000000  # """ <<==== minimum number of passwords to be generated"""
+    count = 10000000  # """ <<==== minimum number of passwords to be generated"""
     letter_frequencies = dict()
     with open(outputFile, 'a') as output:
         with open(wordfile, 'r') as words:
@@ -63,5 +63,71 @@ def main():
     print "done"
 
 
+def mutate():
+    wordfile = "input_dictionaries/linkedin.txt"
+    outputFile = "output_dictionaries/mutations.txt"
+    chng = 2
+    mx_res = 10
+    if len(sys.argv) != 5:
+        print "Number of arguments dif than 2, default filenames will be used"
+    else:
+        wordfile = sys.argv[1]
+        outputFile = sys.argv[2]
+        chng = int(sys.argv[3])
+        mx_res = int(sys.argv[4])
+
+    # delete the content of the output file if there are any
+    with open(outputFile, 'w'):
+        pass
+    with open(outputFile, 'a') as output:
+        with open(wordfile, 'r') as words:
+            print "Mutating passwords"
+            for simpleWord in words:
+                # below should be the logic for the creation of the new dictionary
+                password = Password(simpleWord)
+
+                mutations = password.mutate(change_factor=chng, max_results=mx_res)
+                # mutations = password.append_numbers()
+
+                # write results to output file
+                output.write('\n'.join(mutations) + "\n")
+                # print simpleWord + " + " + str(len(mutations))
+    return
+
+
+def append_numbers():
+    wordfile = "input_dictionaries/linkedin.txt"
+    outputFile = "output_dictionaries/mutations.txt"
+
+    if len(sys.argv) != 3:
+        print "Number of arguments dif than 2, default filenames will be used"
+    else:
+        wordfile = sys.argv[1]
+        outputFile = sys.argv[2]
+
+    # delete the content of the output file if there are any
+    with open(outputFile, 'w'):
+        pass
+    with open(outputFile, 'a') as output:
+        with open(wordfile, 'r') as words:
+            print "Mutating passwords"
+            for simpleWord in words:
+                # below should be the logic for the creation of the new dictionary
+                password = Password(simpleWord)
+
+                # mutations = password.mutate(change_factor=chng, max_results=mx_res)
+                mutations = password.append_numbers()
+
+                # write results to output file
+                output.write('\n'.join(mutations) + "\n")
+                # print simpleWord + " + " + str(len(mutations))
+    return
+
+
 if __name__ == "__main__":
-    main()
+    if False:
+        classify_and_generate()
+    elif True:
+        append_numbers()
+    else:
+        mutate()

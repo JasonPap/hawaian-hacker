@@ -1,6 +1,5 @@
-/linkedin.txt
-/my_passwords.csv
-/my_passwords.txt
+input_dictionaries/
+output_dictionaries/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
