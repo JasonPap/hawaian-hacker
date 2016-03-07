@@ -125,9 +125,9 @@ def append_numbers():
 
 
 if __name__ == "__main__":
-    if False:
+    if True:
         classify_and_generate()
-    elif True:
+    elif False:
         append_numbers()
     else:
         mutate()
